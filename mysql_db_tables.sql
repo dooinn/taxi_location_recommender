@@ -1,25 +1,4 @@
-CREATE TABLE IF NOT EXISTS trips (
-    unique_key VARCHAR(255) PRIMARY KEY,
-    taxi_id VARCHAR(255),
-    trip_start_timestamp DATETIME,
-    trip_end_timestamp DATETIME,
-    trip_seconds FLOAT,
-    trip_miles FLOAT,
-    pickup_community_area INT,
-    dropoff_community_area INT,
-    fare DECIMAL(10, 2),
-    tips DECIMAL(10, 2),
-    extras DECIMAL(10, 2),
-    trip_total DECIMAL(10, 2),
-    payment_type VARCHAR(255),
-    pickup_latitude DECIMAL(9, 6),
-    pickup_longitude DECIMAL(9, 6),
-    dropoff_latitude DECIMAL(9, 6),
-    dropoff_longitude DECIMAL(9, 6),
-    company_id INT,
-    FOREIGN KEY (taxi_id) REFERENCES taxi(taxi_id),
-    FOREIGN KEY (company_id) REFERENCES company(company_id)
-);
+USE chicago_taxi;
 
 CREATE TABLE IF NOT EXISTS taxi (
     taxi_id VARCHAR(255) PRIMARY KEY,
@@ -28,8 +7,7 @@ CREATE TABLE IF NOT EXISTS taxi (
     vehicle_model_year INT,
     vehicle_color VARCHAR(255),
     vehicle_fuel_source VARCHAR(255),
-    company_id INT,
-    FOREIGN KEY (company_id) REFERENCES company(company_id)
+    company_id INT
 );
 
 CREATE TABLE IF NOT EXISTS community (
@@ -51,7 +29,30 @@ CREATE TABLE IF NOT EXISTS company (
 );
 
 CREATE TABLE IF NOT EXISTS location (
-    location_coordinates VARCHAR(255),
-    address VARCHAR(255),
-    PRIMARY KEY (location_coordinates)
+    location_coordinates VARCHAR(255) PRIMARY KEY,
+    address VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS trips (
+    unique_key VARCHAR(255) PRIMARY KEY,
+    taxi_id VARCHAR(255),
+    trip_start_timestamp DATETIME,
+    trip_end_timestamp DATETIME,
+    trip_seconds FLOAT,
+    trip_miles FLOAT,
+    pickup_community_area INT,
+    dropoff_community_area INT,
+    fare DECIMAL(10, 2),
+    tips DECIMAL(10, 2),
+    extras DECIMAL(10, 2),
+    trip_total DECIMAL(10, 2),
+    payment_type VARCHAR(255),
+    pickup_latitude DECIMAL(9, 6),
+    pickup_longitude DECIMAL(9, 6),
+    dropoff_latitude DECIMAL(9, 6),
+    dropoff_longitude DECIMAL(9, 6),
+    pickup_location VARCHAR(255),
+    dropoff_location VARCHAR(255),
+    company_id INT
+);
+
