@@ -41,42 +41,61 @@ def fetch_all_data(table_name):
 
 
 
-def fetch_paginated_data(table_name, page, page_size):
+def fetch_data_with_filters(company_id, start_date, end_date, page, page_size):
     try:
-        # Calculate offset
-        offset = (page - 1) * page_size
-
         # Connection to the database
         db_conn = pymysql.connect(host="127.0.0.1", user="root", passwd="password", database="chicago_taxi",
                                   cursorclass=pymysql.cursors.DictCursor)
         with db_conn.cursor() as cursor:
-            # Count total records
-            cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+            # Prepare the base SQL query for counting total records
+            count_query = "SELECT COUNT(*) FROM trips WHERE company_id = %s"
+
+            # Add date filters if provided for the count query
+            count_params = [company_id]
+            if start_date and end_date:
+                count_query += " AND trip_start_timestamp BETWEEN %s AND %s"
+                count_params.extend([start_date, end_date])
+
+            # Execute the count query
+            cursor.execute(count_query, count_params)
             total_records = cursor.fetchone()['COUNT(*)']
 
-            # Fetch paginated data
-            cursor.execute(f"SELECT * FROM {table_name} LIMIT {page_size} OFFSET {offset}")
+            # Calculate total pages
+            total_pages = (total_records + page_size - 1) // page_size
+
+            # Prepare the data query with filters and pagination
+            data_query = "SELECT * FROM trips WHERE company_id = %s"
+            data_params = [company_id]
+            if start_date and end_date:
+                data_query += " AND trip_start_timestamp BETWEEN %s AND %s"
+                data_params.extend([start_date, end_date])
+
+            # Add pagination
+            offset = (page - 1) * page_size
+            data_query += " LIMIT %s OFFSET %s"
+            data_params.extend([page_size, offset])
+
+            # Execute the data query
+            cursor.execute(data_query, data_params)
             data = cursor.fetchall()
         db_conn.close()
-
-        # Calculate total pages
-        total_pages = (total_records + page_size - 1) // page_size
 
         # Check if data is found
         if data:
             return jsonify({
-                "data": data,
+                "current_page": page,
                 "total_records": total_records,
                 "total_pages": total_pages,
-                "current_page": page,
-                "page_size": page_size
+                "page_size": page_size,
+                "data": data
             })
         else:
-            return f"No data found in table {table_name} for the specified page", 404
+            return "No data found for the given filters", 404
 
     except pymysql.MySQLError as e:
         print(f"Error connecting to the MySQL database: {e}")
         return "Internal Server Error", 500
+
 
 
 
@@ -97,13 +116,12 @@ def company():
 def location():
     return fetch_all_data("location")
 
-@app.route("/trips")
-def trips():
+@app.route("/trips/<int:company_id>/", defaults={'start_date': None, 'end_date': None})
+@app.route("/trips/<int:company_id>/<start_date>/<end_date>")
+def filtered_trips(company_id, start_date, end_date):
     page = request.args.get('page', 1, type=int)
-    page_size = request.args.get('page_size', 10, type=int)
-
-    return fetch_paginated_data("trips", page, page_size)
-
+    page_size = request.args.get('page_size', 1000, type=int)
+    return fetch_data_with_filters(company_id, start_date, end_date, page, page_size)
 
 
 
