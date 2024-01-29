@@ -120,7 +120,7 @@ def location():
 @app.route("/trips/<int:company_id>/<start_date>/<end_date>")
 def filtered_trips(company_id, start_date, end_date):
     page = request.args.get('page', 1, type=int)
-    page_size = request.args.get('page_size', 1000, type=int)
+    page_size = request.args.get('page_size', 10000, type=int)
     return fetch_data_with_filters(company_id, start_date, end_date, page, page_size)
 
 
