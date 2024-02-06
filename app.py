@@ -3,31 +3,17 @@ import pymysql
 import json
 from datetime import date, timedelta
 
-
 app = Flask(__name__)
-
-
-
-@app.route("/")
-def home():
-    return "Home"
-
-
-
 
 
 def fetch_all_data(table_name):
     try:
-        # Connection to the database
         db_conn = pymysql.connect(host="127.0.0.1", user="root", passwd="password", database="chicago_taxi",
                                   cursorclass=pymysql.cursors.DictCursor)
         with db_conn.cursor() as cursor:
-            # Fetch all data from the specified table
             cursor.execute(f"SELECT * FROM {table_name}")
             data = cursor.fetchall()
         db_conn.close()
-
-        # Check if data is found
         if data:
             return jsonify(data)
         else:
@@ -38,16 +24,12 @@ def fetch_all_data(table_name):
         return "Internal Server Error", 500
 
 
-
-
-
 def fetch_data_with_filters(company_id, start_date, end_date, page, page_size):
     try:
-        # Connection to the database
+
         db_conn = pymysql.connect(host="127.0.0.1", user="root", passwd="password", database="chicago_taxi",
                                   cursorclass=pymysql.cursors.DictCursor)
         with db_conn.cursor() as cursor:
-            # Prepare the base SQL query for counting total records
             count_query = "SELECT COUNT(*) FROM trips WHERE company_id = %s"
 
             # Add date filters if provided for the count query
@@ -96,7 +78,74 @@ def fetch_data_with_filters(company_id, start_date, end_date, page, page_size):
         print(f"Error connecting to the MySQL database: {e}")
         return "Internal Server Error", 500
 
+# Routes
+@app.route("/")
+def home():
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicago Taxi Data API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .api-endpoint {
+            margin-bottom: 30px;
+        }
+        .api-url {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chicago Taxi Data API</h1>
+    <p>Welcome to the Chicago Taxi Data API. Use the following endpoints to access data about the Chicago Taxi ecosystem.</p>
 
+    <div class="api-endpoint">
+        <h2>Community</h2>
+        <p>Retrieves all community data.</p>
+        <p><span class="api-url">GET /community</span></p>
+    </div>
+
+    <div class="api-endpoint">
+        <h2>Taxi</h2>
+        <p>Retrieves all taxi data.</p>
+        <p><span class="api-url">GET /taxi</span></p>
+    </div>
+
+    <div class="api-endpoint">
+        <h2>Company</h2>
+        <p>Retrieves all company data.</p>
+        <p><span class="api-url">GET /company</span></p>
+    </div>
+
+    <div class="api-endpoint">
+        <h2>Location</h2>
+        <p>Retrieves all location data.</p>
+        <p><span class="api-url">GET /location</span></p>
+    </div>
+
+    <div class="api-endpoint">
+        <h2>Filtered Trips</h2>
+        <p>Retrieves trip data for a specific company within an optional date range. Pagination is supported through query parameters.</p>
+        <p><span class="api-url">GET /trips/&lt;company_id&gt;/&lt;start_date&gt;/&lt;end_date&gt;</span></p>
+        <p>Parameters:</p>
+        <ul>
+            <li><strong>company_id</strong> (path parameter): The ID of the company.</li>
+            <li><strong>start_date</strong> (path parameter, optional): The start date for filtering trips.</li>
+            <li><strong>end_date</strong> (path parameter, optional): The end date for filtering trips.</li>
+            <li><strong>page</strong> (query parameter, optional): The page number for pagination (default is 1).</li>
+            <li><strong>page_size</strong> (query parameter, optional): The number of records per page (default is 10000).</li>
+        </ul>
+        <p>Example: <span class="api-url">GET /trips/1/2023-01-01/2023-01-31?page=1&page_size=100</span></p>
+    </div>
+
+</body>
+</html>
+"""
 
 
 
@@ -122,9 +171,6 @@ def filtered_trips(company_id, start_date, end_date):
     page = request.args.get('page', 1, type=int)
     page_size = request.args.get('page_size', 10000, type=int)
     return fetch_data_with_filters(company_id, start_date, end_date, page, page_size)
-
-
-
 
     
 if __name__ == "__main__":
