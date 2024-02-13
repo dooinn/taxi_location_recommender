@@ -5,6 +5,7 @@ This project is part of Ironhack and the RNCP (Répertoire National des Certific
 ## Requirements & Deliverables
 - [Project Management - Trello](https://trello.com/b/oCHDG1CD/rncp-taxi-location-recommender)
 - [Data collection & cleaning](https://github.com/dooinn/taxi_location_recommender/blob/main/jupyter_notebook/1-Data-Collection-Storing.ipynb)
+- [Data expose via API & Machine Learning](https://github.com/dooinn/taxi_location_recommender/blob/main/jupyter_notebook/2-APIDataExpose-EDA%20-MachineLearning.ipynb)
 - [ER model](https://github.com/dooinn/taxi_location_recommender/blob/main/img_assets/erd.png)
 - [Data sources and metadata](https://github.com/dooinn/taxi_location_recommender/tree/main/datasets)
 - [Databse script](https://github.com/dooinn/taxi_location_recommender/blob/main/sql/mysql_db_tables.sql)
