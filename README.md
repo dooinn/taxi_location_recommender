@@ -27,7 +27,3 @@ Our primary goal is to harness data from various sources to empower taxi drivers
 - **[Nominatim API - OpenStreetMap Data](https://nominatim.org/release-docs/develop/api/Overview/)** - This API provides access to global geographical data, allowing for the retrieval of precise geo-coordinates and addresses for the pickup and dropoff locations identified in the taxi trip records.
 - **[Flat files from Chicago Data Portal](https://data.cityofchicago.org/browse?q=taxi&sortBy=relevance)** - Sourced from the city’s official data portal, this dataset includes detailed information on taxi vehicles and companies, such as vehicle models, fuel types, and company contact information, enriching the analysis with operational insights.
 
-
-
-
-# Related Links
