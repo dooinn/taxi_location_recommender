@@ -3,7 +3,7 @@
 This project is part of Ironhack and the RNCP (Répertoire National des Certifications Professionnelles, RNCP37827 - Developer in Artificial Intelligence). It involves the launch of a Taxi Pickup Location Recommender System
 
 ## Requirements & Deliverables
-- [Project Management = Trello](https://trello.com/b/oCHDG1CD/rncp-taxi-location-recommender)
+- [Project Management - Trello](https://trello.com/b/oCHDG1CD/rncp-taxi-location-recommender)
 - [Data collection & cleaning](https://github.com/dooinn/taxi_location_recommender/blob/main/jupyter_notebook/1-Data-Collection-Storing.ipynb)
 - [ER model](https://github.com/dooinn/taxi_location_recommender/blob/main/img_assets/erd.png)
 - [Data sources and metadata](https://github.com/dooinn/taxi_location_recommender/tree/main/datasets)
