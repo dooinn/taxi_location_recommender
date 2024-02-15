@@ -19,7 +19,7 @@ with open('nearest_neighbors_model.pkl', 'rb') as file:
     loaded_nearest_neighbors = pickle.load(file)
 
 cluster_centers = pd.read_csv('cluster_centers.csv')
-trips = pd.read_csv('/Users/dooinnkim/jupyter_notebook/ironhacks/taxi_location_recommender/datasets/trips_clusters.csv') 
+trips = pd.read_csv('/Users/dooinnkim/jupyter_notebook/ironhacks/taxi_location_recommender/datasets/trips_clusters_sample.csv') 
 
 
 
