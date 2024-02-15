@@ -19,7 +19,7 @@ with open('nearest_neighbors_model.pkl', 'rb') as file:
     loaded_nearest_neighbors = pickle.load(file)
 
 cluster_centers = pd.read_csv('cluster_centers.csv')
-trips = pd.read_csv('../dataset/trips_clusters.csv') 
+trips = pd.read_csv('/Users/dooinnkim/jupyter_notebook/ironhacks/taxi_location_recommender/datasets/trips_clusters.csv') 
 
 
 
@@ -34,8 +34,24 @@ def get_location_details(lat, lon):
         return location_name
     else:
         return "Location details not available"
-def recommend_pickup_locations(current_location, current_time, current_date, model, cluster_data, historical_data):
+    
+    
+def calculate_citywide_average_distance(current_location, cluster_centers):
+    all_distances = cluster_centers.apply(lambda row: geodesic(current_location, (row['pickup_latitude'], row['pickup_longitude'])).kilometers, axis=1)
+    return all_distances.mean()
 
+def recommend_pickup_locations(current_location, current_time, current_date, model, cluster_data, historical_data):
+    """
+    1. Calculates the city-wide average distance to all hotspots from the user's current location.
+    2. Calculates distance scores for each recommended location based on how their distance compares to the city-wide average.
+    3. Calculates popularity scores based on the relative 'busyness' (here represented by the 'count' of trips) of each recommended location compared to the most popular location.
+    4. Combines these scores into a final 'recommendation_score' for each recommended location.
+    5. Sorts recommended locations by this combined score before returning them.
+    """
+    
+    
+    avg_distance_all_hotspots = calculate_citywide_average_distance(current_location, cluster_data)
+    
     current_time = pd.to_datetime(current_time).hour  
     current_date = pd.to_datetime(current_date).dayofweek 
 
@@ -50,8 +66,21 @@ def recommend_pickup_locations(current_location, current_time, current_date, mod
 
     recommended_locations['address'] = recommended_locations.apply(lambda row: get_location_details(row['pickup_latitude'], row['pickup_longitude']), axis=1)
     recommended_locations['distance_km'] = recommended_locations.apply(lambda row: geodesic(current_location, (row['pickup_latitude'], row['pickup_longitude'])).kilometers, axis=1)
+    recommended_locations['distance_km'] = round(recommended_locations['distance_km'],1)
+    # Calculate scores
+    recommended_locations['distance_score'] = 1 - (recommended_locations['distance_km'] / avg_distance_all_hotspots)
+    recommended_locations['distance_score'] = round(recommended_locations['distance_score'],2)*100
+    max_count = ranked_clusters['count'].max()
+    recommended_locations['popularity_score'] = recommended_locations['count'] / max_count
+    recommended_locations['popularity_score'] = round(recommended_locations['popularity_score'],2)*100
+    recommended_locations['recommendation_score'] = (recommended_locations['distance_score'] + recommended_locations['popularity_score']) / 2
+    recommended_locations['recommendation_score'] = round(recommended_locations['recommendation_score'],2)
 
-    return recommended_locations
+    return recommended_locations.sort_values(by='recommendation_score', ascending=False)
+
+
+
+
 def create_map(current_location, recommended_locations):
 
     map = folium.Map(location=current_location, zoom_start=12)
@@ -131,8 +160,11 @@ if st.button('Recommend Pickup Locations'):
     recommended_pickups = recommend_pickup_locations(current_location, current_time, current_day_num, loaded_nearest_neighbors, cluster_centers, trips)
     
     if not recommended_pickups.empty:
-        st.write(recommended_pickups[['address', 'distance_km']])
+        st.write(recommended_pickups[['recommendation_score','address', 'distance_km','distance_score','popularity_score','pickup_latitude','pickup_longitude']])
         pickup_map = create_map(current_location, recommended_pickups)
         folium_static(pickup_map)
+        
+
+        
     else:
         st.write("No recommendations available for the given input.")

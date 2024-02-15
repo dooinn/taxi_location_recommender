@@ -6,7 +6,7 @@ st.set_page_config(
     page_icon="🚖"
 )
 
-# Apply custom styles to the title and the sidebar background
+
 st.markdown("""
              <style>
              .title {
@@ -26,7 +26,7 @@ st.markdown("""
 st.markdown('<div class="title"><h1>Taxi Pickup Location Recommender System</h1></div>', unsafe_allow_html=True)
 st.markdown('<div class="title"><h2>"How to find passengers in the most efficient way?"</h2></div>', unsafe_allow_html=True)
 
-st.image('taxIDriver.jpeg', caption='Local Image')
+st.image('taxIDriver.jpeg')
 
 
 # Introduction section
