@@ -1,0 +1,5 @@
+folium==0.12.1  # Use the version of folium you have tested with
+# Other dependencies
+streamlit==1.8.0  # Example, ensure to use versions compatible with your app
+pandas
+numpy
