@@ -26,9 +26,9 @@ st.markdown("""
 st.markdown('<div class="title"><h1>Taxi Pickup Location Recommender System</h1></div>', unsafe_allow_html=True)
 st.markdown('<div class="title"><h2>"How to find passengers in the most efficient way?"</h2></div>', unsafe_allow_html=True)
 
-
-with open('taxIDriver.jpeg', 'rb') as file:
-    st.image(file)
+# st.image('taxIDriver.jpeg')
+# with open('taxIDriver.jpeg', 'rb') as file:
+#     st.image(file)
 
 # Introduction section
 st.header("Introduction")
