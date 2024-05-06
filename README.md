@@ -32,10 +32,13 @@ Our primary goal is to harness data from various sources to empower taxi drivers
 
 ## Streamlit App Demonstration
 
-<div style="position: relative; padding-bottom: 56.25%; height: 0;">
-    <iframe src="https://www.loom.com/embed/9a27d4a7538848da91a404d32a4ee551?sid=b9f88f23-4d2a-4fcc-acf1-3d52fec36d01" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
-</div>
-
-</div>
+<div>
+    <a href="https://www.loom.com/share/817e59307ed0462cbb4e9588dd1c91e7">
+      <p>Taxi Pikcup Location Recommender - demo - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/817e59307ed0462cbb4e9588dd1c91e7">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/817e59307ed0462cbb4e9588dd1c91e7-with-play.gif">
+    </a>
+  </div>
 
 
