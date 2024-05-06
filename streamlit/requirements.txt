@@ -1,9 +1,9 @@
 folium
 streamlit
-pandas
 numpy
+pandas
 requests
 geopy
-pickle
 datetime
 pytz
+streamlit_folium
